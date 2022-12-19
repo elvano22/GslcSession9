@@ -16,6 +16,7 @@ public class Book extends Product implements iDiscountable{
 		this.author = author;
 	}
 
+	//discount price for member
 	@Override
 	public int getDiscount() {
 		int discounted = (int) (super.price * 0.8);

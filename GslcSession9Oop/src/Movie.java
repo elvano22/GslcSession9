@@ -15,7 +15,8 @@ public class Movie extends Cd implements iDiscountable{
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
-
+	
+	//discount price for member
 	@Override
 	public int getDiscount() {
 		int discounted = (int) (super.price * 0.9);

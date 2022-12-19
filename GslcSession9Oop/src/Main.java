@@ -8,10 +8,12 @@ public class Main {
 	ArrayList<Product> productList = new ArrayList<>();
 	
 	public void showAll() {
+		//if there's no data, print no data
 		if(productList.size()==0) {
 			System.out.println("No Data");
 			return;
 		}
+		//print all product list
 		System.out.printf("|%-3s|%-15s|%-7s|%-15s|%-15s|%-15s|%-15s|%-10s|%-15s|%-15s|%-7s|", "No", "Title","Season", "Type", "CD Type", "Author", "Director", "Duration", "Total Episodes","Price", "Stock");
 		for(int i=0; i<productList.size(); i++) {
 			if(productList.get(i).getType()=="Book"){
@@ -35,6 +37,7 @@ public class Main {
 		String areMember, findId;
 		int check=-1, chooseProduct, howMany, total;
 		
+		//ask the customer, are they a member or not
 		do {
 			System.out.print("Are you a member [y | n]: ");
 			areMember = scan.nextLine();
@@ -45,7 +48,7 @@ public class Main {
 				
 				check =-1;
 				for(int i=0; i<memberList.size(); i++) {
-					if(memberList.get(i).getId()==findId) {
+					if(memberList.get(i).getId().equals(findId)) {
 						check = i;
 					}
 				}
@@ -53,6 +56,7 @@ public class Main {
 			}
 		} while((areMember!="y" || check == -1) && areMember!="n");
 		
+		//print all productList
 		System.out.printf("|%-3s|%-15s|%-7s|%-15s|%-15s|%-15s|%-15s|%-10s|%-15s|%-15s|%-7s|", "No", "Title","Season", "Type", "CD Type", "Author", "Director", "Duration", "Total Episodes","Price", "Stock");
 		for(int i=0; i<productList.size(); i++) {
 			if(productList.get(i).getType()=="Book"){
@@ -68,17 +72,21 @@ public class Main {
 				System.out.printf("|%-3d|%-15s|%-7d|%-15s|%-15s|%-15s|%-15s|%-10d|%-15d|%-15d|%-7d|", i+1, series.getTitle() ,series.getSeason(), series.getType(), series.getCdType(),"-", series.getDirector(), "-", series.getTotalEpisodes(),series.getPrice(), series.getStock());
 			}
 		}
+		
+		//what product you want to buy, and validate the input
 		do {
 			System.out.println("What product number do you want to buy?");
 			System.out.print(" >> ");
 			chooseProduct = scan.nextInt(); scan.nextLine();
 		}while(chooseProduct<1 || chooseProduct>productList.size());
+		//how many product you want to buy, and validate the input
 		do {
 			System.out.println("How many?");
 			System.out.print(" >> ");
 			howMany = scan.nextInt(); scan.nextLine();
 		}while(howMany<1 || howMany>productList.get(chooseProduct-1).getStock());
 		
+		//if the customer is a member, the customer can get discounted price for books and cd movies
 		if(areMember == "y") {
 			if(productList.get(chooseProduct-1).getType() == "Book") {
 				total = ((Book)productList.get(chooseProduct-1)).getDiscount() * howMany;
@@ -93,6 +101,7 @@ public class Main {
 		}
 		else total = productList.get(chooseProduct-1).getPrice() * howMany;
 		
+		//subtract the stock, and if the stock become 0, delete the product in productList
 		int temp = productList.get(chooseProduct-1).getStock() - howMany;
 		if(temp == 0) productList.remove(chooseProduct-1);
 		else productList.get(chooseProduct-1).setStock(temp);
@@ -109,6 +118,7 @@ public class Main {
 		
 		System.out.println("ADD PRODUCT");
 		System.out.println("=====================");
+		//ask input for every variable and validate the input
 		do {
 			System.out.print("Title: ");
 			title = scan.nextLine();
@@ -126,6 +136,7 @@ public class Main {
 			type = scan.nextLine();
 		} while(!type.equals("Book") && !type.equals("CD"));
 		
+		//if the product type = book, ask input for author and validate
 		if (type.equals("Book")) {
 			do {
 				System.out.print("Author: ");
@@ -133,6 +144,7 @@ public class Main {
 			} while(author.isEmpty());
 			productList.add(new Book(title, type, price, stock, author));
 		}
+		//if the product type = cd, ask input for director and cd type, and validate 
 		else if (type.equals("CD")) {
 			do {
 				System.out.print("Director: ");
@@ -143,6 +155,7 @@ public class Main {
 				cdType = scan.nextLine();
 			} while(!cdType.equals("Movie") && !cdType.equals("Series"));
 			
+			//if cdType = Movie, ask input for the movie duration and validate
 			if(cdType.equals("Movie")) {
 				do {
 					System.out.print("Movie duration: ");
@@ -150,6 +163,7 @@ public class Main {
 				} while(duration<0);
 				productList.add(new Movie(title, type, price, stock, cdType, director, duration));
 			}
+			//if cdType = Series, ask input for the season and total episodes, and validate
 			else if(cdType.equals("Series")) {
 				do {
 					System.out.print("Season: ");
@@ -169,10 +183,12 @@ public class Main {
 	
 	public void deleteProduct() {
 		int delete;
+		//if there is no data, print no data and stop the function
 		if(productList.size()==0) {
 			System.out.println("No Data");
 			return;
 		}
+		// print all the product
 		System.out.printf("|%-3s|%-15s|%-7s|%-15s|%-15s|%-15s|%-15s|%-10s|%-15s|%-15s|%-7s|", "No", "Title","Season", "Type", "CD Type", "Author", "Director", "Duration", "Total Episodes","Price", "Stock");
 		for(int i=0; i<productList.size(); i++) {
 			if(productList.get(i).getType()=="Book"){
@@ -188,11 +204,14 @@ public class Main {
 				System.out.printf("|%-3d|%-15s|%-7d|%-15s|%-15s|%-15s|%-15s|%-10d|%-15d|%-15d|%-7d|", i+1, series.getTitle() ,series.getSeason(), series.getType(), series.getCdType(),"-", series.getDirector(), "-", series.getTotalEpisodes(),series.getPrice(), series.getStock());
 			}
 		}
-		
+		//ask input for the index of the product
 		System.out.print("Choose index: ");
 		delete = scan.nextInt(); scan.nextLine();
+		
+		//remove
 		productList.remove(delete-1);
 		System.out.println("That product is successfully removed");
+		
 		System.out.println("Press ENTER to Continue");
 		scan.nextLine();
 	}
@@ -203,6 +222,7 @@ public class Main {
 		
 		System.out.println("ADD MEMBER");
 		System.out.println("=====================");
+		//ask input for every variables and validate
 		do {
 			System.out.print("Name: ");
 			name = scan.nextLine();
@@ -217,8 +237,6 @@ public class Main {
 					break;
 				}
 			}
-			System.out.println(phoneNumber.startsWith("08"));
-			System.out.println(check);
 		} while(!phoneNumber.startsWith("08") || !check);
 		do {
 			System.out.print("Email [..........@gmail.com]: ");
@@ -231,9 +249,10 @@ public class Main {
 			id += phoneNumber.charAt(i);
 		}
 		id += (int)Math.random()*9;
-		System.out.println("You are now a member. Your id is: " + id);
 		
+		//add member and print the id
 		memberList.add(new Member(name, phoneNumber, email, id));
+		System.out.println("You are now a member. Your id is: " + id);
 		
 		System.out.println("Press ENTER to Continue");
 		scan.nextLine();
@@ -243,17 +262,25 @@ public class Main {
 		String findId;
 		int check = -1;
 		do {
+			//ask input for the id
 			System.out.print("Input id: ");
 			findId = scan.nextLine();
 			
+			//find the id
 			check =-1;
 			for(int i=0; i<memberList.size(); i++) {
-				if(memberList.get(i).getId()==findId) {
+				if(memberList.get(i).getId().equals(findId)) {
 					check = i;
 				}
 			}
+			
+			//if the id not found, print there is no member with that id
 			if (check == -1) System.out.println("There is no member with that id");
 		} while(check == -1);
+		
+		//remove the member of that id
+		memberList.remove(check);
+		System.out.println("Member is successfully removed");
 		
 		System.out.println("Press ENTER to Continue");
 		scan.nextLine();
